@@ -1,0 +1,152 @@
+# tictactoeprojectprivate
+# for use on jupyternotebook because of certain functions such as clear_output()
+
+First self-initiated project - Tic Tac Toe Game!
+
+# Show the tic tac toe board before/after changes
+def updateboard(board):
+    print(" " + board[7] + " |" + " " + board[8] + " | " + " " + board[9])
+    print("-----------")
+    print(" " + board[4] + " |" + " " + board[5] + " | " + " " + board[6])
+    print("-----------")
+    print(" " + board[1] + " |" + " " + board[2] + " | " + " " + board[3])
+  
+# Check if player 1 has won  
+def checkboardplayer1(board):
+    return ((board[7] == board[8] == board[9] == player1_mark) or
+            (board[4] == board[5] == board[6] == player1_mark) or
+            (board[1] == board[2] == board[3] == player1_mark) or
+            (board[7] == board[4] == board[1] == player1_mark) or
+            (board[8] == board[5] == board[2] == player1_mark) or
+            (board[9] == board[6] == board[3] == player1_mark) or
+            (board[7] == board[5] == board[3] == player1_mark) or
+            (board[9] == board[5] == board[1] == player1_mark))
+
+# Check if player 2 has won
+def checkboardplayer2(board):
+    return ((board[7] == board[8] == board[9] == player2_mark) or
+            (board[4] == board[5] == board[6] == player2_mark) or
+            (board[1] == board[2] == board[3] == player2_mark) or
+            (board[7] == board[4] == board[1] == player2_mark) or
+            (board[8] == board[5] == board[2] == player2_mark) or
+            (board[9] == board[6] == board[3] == player2_mark) or
+            (board[7] == board[5] == board[3] == player2_mark) or
+            (board[9] == board[5] == board[1] == player2_mark))
+            
+# Adds player 2's symbol to indicated position          
+def addplayer2(board,player2_mark,position):
+    board[position] = player2_mark    
+
+# Adds player 1's symbol to indicated position 
+def addplayer1(board,player1_mark,position):
+    board[position] = player1_mark 
+
+# Input of position to enter symbol
+def enterposition(board):
+    again = True
+    while again == True:
+        try:
+            positionint = int(input("Enter a position! (1-9)"))
+            if isinstance(positionint,int) == True and 1<=positionint<=9:
+                if board[positionint] == " ":
+                    again = False
+                    return positionint
+                else:
+                    print("This position is taken!")
+                    pass
+            else:
+                print("It has to be an INTEGER between 1 and 9 inclusive.")
+        except ValueError:
+            print("Please enter an INTEGER between 1 and 9 inclusive.")
+
+# Check if the board is full
+def fullboardcheck(board):
+    for element in range(1,len(board)):
+        if board[element] == ' ':
+            return False
+    return True    
+    
+import random
+from IPython.display import clear_output
+print("Welcome to Tic Tac Toe!")
+base = True
+while base == True:
+    x = input("Do you want to play a game? (Y/N)").lower()
+    if x == "y":
+        clear_output()
+        turn = random.randint(0,1)
+        board = [" "] * 10
+        while x=="y":
+            if turn == 0:
+                print("Player 1 starts! (randomized)")
+                player1_mark = input("Please choose a symbol! (X/O)")
+                if player1_mark.lower() == "x":
+                    player2_mark = "O"
+                    player1_mark = player1_mark.upper()
+                    break
+                elif player1_mark.lower() == "o":
+                    player2_mark="X"
+                    player1_mark = player1_mark.upper()
+                    break
+                else:
+                    print("Invalid Symbol! Please type in again.")
+            elif turn == 1:
+                print("Player 2 starts! (randomized)")
+                player2_mark = input("Please choose a symbol! (X/O)")
+                if player2_mark.lower() == "x":
+                    player1_mark = "O"
+                    player2_mark = player2_mark.upper()
+                    break
+                elif player2_mark.lower() == "o":
+                    player1_mark = "X"
+                    player2_mark = player2_mark.upper()                    
+                    break
+                else:
+                    print("Invalid Symbol! Please type in again.")
+        game_on = True            
+        while game_on == True:
+            clear_output()
+            updateboard(board)
+            while turn == 0:
+                print("Player 1's Turn!")
+                position = enterposition(board)
+                addplayer1(board,player1_mark,position)
+                clear_output()
+                updateboard(board)
+                checkboardplayer1(board)
+                if checkboardplayer1(board) == True:
+                    print("\nCongratulations! Player 1 has won the game.")
+                    game_on = False
+                    break
+                else:
+                    if fullboardcheck(board) == True:
+                        print("\nIt's a tie!")
+                        game_on = False
+                        break
+                    else:                    
+                        turn = 1
+            else:
+                print("Player 2's Turn!")
+                position=enterposition(board)
+                addplayer2(board,player2_mark,position)
+                clear_output()
+                updateboard(board)
+                checkboardplayer2(board)
+                if checkboardplayer2(board) == True:
+                    print ("\nCongratulations! Player 2 has won the game.")
+                    game_on = False
+                    break
+                else:
+                    if fullboardcheck(board) == True:
+                        print("\nIt's a tie!")
+                        game_on = False
+                        break
+                    else:
+                        turn = 0   
+    elif x == "n":
+        clear_output()
+        print("Come back again!")
+        base = False
+    else:
+        print("Invalid Input! Please type in again.")
+    
